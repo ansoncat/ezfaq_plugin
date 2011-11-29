@@ -31,15 +31,7 @@ class FaqMailer < Mailer
     body :faq => faq,
          :faq_url => url_for(:controller => 'ezfaq', :action => 'show', :id => project, :faq_id => faq)
 
-    content_type "multipart/alternative"
-
-    part "text/plain" do |p|
-      p.body = render_message("faq_add.text.plain.rhtml", body)
-    end
-
-    part "text/html" do |p|
-      p.body = render_message("faq_add.text.html.rhtml", body)
-    end
+    render_multipart('faq_add', body)
 
   end
   
@@ -57,15 +49,7 @@ class FaqMailer < Mailer
     body :faq => faq,
          :faq_url => url_for(:controller => 'ezfaq', :action => 'show', :id => project, :faq_id => faq)
 
-    content_type "multipart/alternative"
-
-    part "text/plain" do |p|
-      p.body = render_message("faq_update.text.plain.rhtml", body)
-    end
-
-    part "text/html" do |p|
-      p.body = render_message("faq_update.text.html.rhtml", body)
-    end
+    render_multipart('faq_update', body)
 
   end
   
