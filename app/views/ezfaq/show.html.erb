@@ -12,7 +12,7 @@
 <h3><%=h @faq.question %></h3>
 <p class="author">
 <%= authoring @faq.created_on, @faq.author %>.
-<%= authoring @faq.updated_on, @faq.author, :label => :label_updated_time_by if @faq.created_on != @faq.updated_on %>
+<%= authoring @faq.updated_on, @faq.updater, :label => :label_updated_time_by if @faq.created_on != @faq.updated_on %>
 </p></p>
 
 <table width="100%">
