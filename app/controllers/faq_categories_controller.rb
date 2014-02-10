@@ -22,8 +22,8 @@ class FaqCategoriesController < ApplicationController
   menu_item :ezfaq, :only => [:index, :edit, :destroy]
   
   before_filter :find_project, :authorize
-  verify :method => :post, :only => :destroy
-  verify :mothod => :post, :only => :change_order
+#  verify :method => :post, :only => :destroy
+#  verify :mothod => :post, :only => :change_order
 
   def index
     @categories = FaqCategory.find(:all, :conditions => "project_id = #{@project.id}", :order => "position")
@@ -31,7 +31,7 @@ class FaqCategoriesController < ApplicationController
   
   def edit
     @category = FaqCategory.find(:first, :conditions => "project_id = #{@project.id} and id = #{params[:category_id]}")
-    if request.post? and @category.update_attributes(params[:category])
+    if (request.post? || request.put?) and @category.update_attributes(params[:category])
       flash[:notice] = l(:notice_successful_update)
       redirect_to :controller => 'faq_categories', :action => 'index', :id => @project
     end
@@ -40,7 +40,7 @@ class FaqCategoriesController < ApplicationController
   end
 
   def change_order
-    if request.post? 
+    if request.post? || request.put?
       category = FaqCategory.find(:first, :conditions => "project_id = #{@project.id} and id = #{params[:category_id]}")
       case params[:position]
       when 'highest'; category.move_to_top

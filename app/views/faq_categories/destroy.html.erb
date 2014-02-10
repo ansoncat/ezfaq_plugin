@@ -1,6 +1,6 @@
 <h2><%=l(:label_faq_category)%>: <%=h @category.name %></h2>
 
-<% form_tag({}) do %>
+<% form = form_tag({}) do %>
 <div class="box">
 <p><strong><%= l(:text_faq_category_destroy_question, :value => @faq_count) %></strong></p>
 <p><label><%= radio_button_tag 'todo', 'nullify', true %> <%= l(:text_faq_category_destroy_assignments) %></label><br />
@@ -14,3 +14,4 @@
 <%= submit_tag l(:button_apply) %>
 <%= link_to l(:button_cancel), :controller => 'faq_categories', :action => 'index', :id => @project %>
 <% end %>
+<%= form if Rails::VERSION::MAJOR >= 3 %>

@@ -24,25 +24,13 @@ class FaqMailer < Mailer
     
     mail_addresses = [ faq.author.mail ]
     mail_addresses << faq.assigned_to.mail if faq.assigned_to
-    
-    recipients mail_addresses.compact.uniq
 
-    subject "[#{faq.project.name} - #{l(:label_faq_new)} - #{l(:label_faq)}##{faq.id}] #{faq.question}"
-    body :faq => faq,
-         :faq_url => url_for(:controller => 'ezfaq', :action => 'show', :id => project, :faq_id => faq)
-
-    content_type "multipart/alternative"
-
-    part "text/plain" do |p|
-      p.body = render_message("faq_add.text.plain.rhtml", body)
-    end
-
-    part "text/html" do |p|
-      p.body = render_message("faq_add.text.html.rhtml", body)
-    end
-
+    @faq = faq    
+    @faq_url = url_for(:controller => 'ezfaq', :action => 'show', :id => project, :faq_id => faq)
+    mail :to => mail_addresses.compact.uniq,
+      :subject => "[#{faq.project.name} - #{l(:label_faq_new)} - #{l(:label_faq)}##{faq.id}] #{faq.question}"
   end
-  
+
   def faq_update(project, faq)    
     redmine_headers 'Project' => faq.project.identifier,
                     'Faq-Id' => faq.id,
@@ -51,22 +39,10 @@ class FaqMailer < Mailer
     mail_addresses = [ faq.author.mail, faq.updater.mail ]
     mail_addresses << faq.assigned_to.mail if faq.assigned_to
 
-    recipients  mail_addresses.compact.uniq
-    
-    subject "[#{faq.project.name} - #{l(:label_faq_updated)} - #{l(:label_faq)}##{faq.id}] #{faq.question}"
-    body :faq => faq,
-         :faq_url => url_for(:controller => 'ezfaq', :action => 'show', :id => project, :faq_id => faq)
-
-    content_type "multipart/alternative"
-
-    part "text/plain" do |p|
-      p.body = render_message("faq_update.text.plain.rhtml", body)
-    end
-
-    part "text/html" do |p|
-      p.body = render_message("faq_update.text.html.rhtml", body)
-    end
-
+    @faq = faq
+    @faq_url = url_for(:controller => 'ezfaq', :action => 'show', :id => project, :faq_id => faq)    
+    mail :to => mail_addresses.compact.uniq,
+      :subject => "[#{faq.project.name} - #{l(:label_faq_updated)} - #{l(:label_faq)}##{faq.id}] #{faq.question}"
   end
   
 end

@@ -16,7 +16,7 @@ pl:
   label_info_for_input_id: (Wpisz id)
   label_manage: Zarządzaj
   label_faq_setting: Ustawienia FAQ
-  label_updated_time_by: Zaktualizowane przez {{author}} {{age}} temu
+  label_updated_time_by: Zaktualizowane przez %{author} %{age} temu
 
   field_question: Pytanie
   field_answer: Odpowiedź
@@ -31,11 +31,11 @@ pl:
   field_faq_note: Opis FAQ (Wyświetlany przed lista pytań)
   field_note: Notatka do FAQ
 
-  text_faq_category_destroy_question: Z tą kategorią powiązane są FAQ ({{value}}). Co chcesz zrobić?
+  text_faq_category_destroy_question: Z tą kategorią powiązane są FAQ (%{value}). Co chcesz zrobić?
   text_faq_category_destroy_assignments: Usuń przypisanie do kategorii
   text_faq_category_reassign_to: Przydziel FAQ do tej kategorii
-  text_faq_added: FAQ {{title}} zostało stworzone przez {{author}}.
-  text_faq_updated: FAQ {{title}} zostało zaktualizowane przez {{author}}.
+  text_faq_added: FAQ %{title} zostało stworzone przez %{author}.
+  text_faq_updated: FAQ %{title} zostało zaktualizowane przez %{author}.
   text_faq_pdf_title_not_set: Uwaga! Ustaw tytuł dokumentu w Ustawieniach FAQ.
 
   permission_view_faqs: Przeglądanie FAQ

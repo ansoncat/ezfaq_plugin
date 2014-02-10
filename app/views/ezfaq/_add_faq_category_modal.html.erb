@@ -1,0 +1,11 @@
+<h3 class="title"><%=l(:label_faq_category_new)%></h3>
+
+<% form = labelled_form_for :category, @category, :url => { :action => 'add_faq_category' }, :html => { :class => 'tabular'}, :remote => true  do |f| %>
+<%= render :partial => 'faq_categories/form', :locals => { :f => f } %>
+<p class="buttons">
+<%= submit_tag l(:button_create) %>
+<%= submit_tag l(:button_cancel), :onclick => "hideModal(this);" %>
+</p>
+<% end %>
+
+<%= form if Rails::VERSION::MAJOR >= 3 %>

@@ -1,7 +1,7 @@
 <h2><%= l(:label_settings) %></h2>
 
 <div id="settings">
-<% labelled_tabular_form_for :faq_setting, @faq_setting, :url => {:id => @project}, :html => {:id => 'faq_setting-form'} do |f| %>
+<% form = labelled_form_for :faq_setting, @faq_setting, :url => {:id => @project}, :html => {:id => 'faq_setting-form', :class => 'tabular'} do |f| %>
 <%= error_messages_for 'faq_setting' %>
 <div class="box">
   <p><%= f.text_field :pdf_title, :size =>80, :required => true %></p>
@@ -10,6 +10,8 @@
 <%= submit_tag l(:button_save) %>
 <% end %>
 </div>
+
+<%= form if Rails::VERSION::MAJOR >= 3 %>
 
 <% content_for :sidebar do %>
     <%= render :partial => 'ezfaq/sidebar' %>

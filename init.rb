@@ -17,21 +17,13 @@
 
 require 'redmine'
 
-# Patches to the Redmine core. Will not work in development mode
-require 'dispatcher'
-require 'attachment_patch'
-Dispatcher.to_prepare do
-  Attachment.send(:include, AttachmentPatch)
-end
 
-# Hooks
-require_dependency 'ezfaq_layouts_hook'
 
-Redmine::Plugin.register :ezfaq_plugin do
+Redmine::Plugin.register :redmine_ezfaq_plugin do
   name 'ezFAQ plugin'
   author 'Zou Chaoqun'
   description 'This is a FAQ management plugin for Redmine'
-  version '0.3.5'
+  version '0.3.6'
   url 'http://ezwork.techcon.thtf.com.cn/projects/ezwork'
   author_url 'mailto:zouchaoqun@gmail.com'
 
@@ -48,5 +40,19 @@ Redmine::Plugin.register :ezfaq_plugin do
 
   # Faqs are added to the activity view
   activity_provider :faqs, :class_name => 'Faq::FaqVersion', :default => false
-
 end
+
+if Rails::VERSION::MAJOR < 3
+  require 'dispatcher'
+  prepare = Dispatcher
+else
+  prepare = ActionDispatch::Callbacks
+end
+
+prepare.to_prepare do
+  require_dependency 'ezfaq_attachment_patch'
+end
+
+# Hooks
+require_dependency 'ezfaq_layouts_hook'
+

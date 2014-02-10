@@ -1,3 +1,9 @@
+2012-12-06
+==========
+Added compatibility with Redmine 2.x. 
+Compatibility with 1.x - not tested and may be corrupted
+
+
 2011-06-01
 ==========
 This is a fork of original ezfaq, a FAQ management plugin for Redmine by Zou Chaoqun. The goal is to fix bugs and merge existing patches for daily use.

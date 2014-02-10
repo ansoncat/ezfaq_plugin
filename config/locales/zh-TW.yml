@@ -16,7 +16,7 @@ zh-TW:
   label_info_for_input_id: (請輸入編號)
   label_manage: 管理
   label_faq_setting: FAQ配置
-  label_updated_time_by: 由 {{author}} 在 {{age}} 之前更新
+  label_updated_time_by: 由 %{author} 在 %{age} 之前更新
 
   field_question: 問題
   field_answer: 解答
@@ -31,11 +31,11 @@ zh-TW:
   field_faq_note: FAQ說明(顯示在FAQ列表前)
   field_note: FAQ說明
 
-  text_faq_category_destroy_question: 有一些FAQ（{{value}} 個）屬於此類別。您想進行哪種操作？
+  text_faq_category_destroy_question: 有一些FAQ（%{value} 個）屬於此類別。您想進行哪種操作？
   text_faq_category_destroy_assignments: 刪除FAQ的所屬類別（FAQ變為無類別）
   text_faq_category_reassign_to: 為FAQ選擇其它類別
-  text_faq_added: FAQ {{title}} 已由 {{author}} 創建。
-  text_faq_updated: FAQ {{title}} 已由 {{author}} 更新。
+  text_faq_added: FAQ %{title} 已由 %{author} 創建。
+  text_faq_updated: FAQ %{title} 已由 %{author} 更新。
   text_faq_pdf_title_not_set: 注意！請在FAQ配置中設置PDF文檔的標題
 
   permission_view_faqs: 查看FAQ

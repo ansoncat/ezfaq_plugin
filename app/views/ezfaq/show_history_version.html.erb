@@ -3,18 +3,24 @@
 
 <h2><%= l(:label_faq) %>#<%= @faq_version.faq_id %> <%=l(:label_version) %><%= @faq_version.version %></h2>
 
-<p>
-<%= link_to(('&#171; ' + l(:label_previous)), :action => 'show_history_version', :id => @project, :faq_id => @faq, :version => (@faq_version.version - 1)) + " - " if @faq_version.version > 1 %>
-<%= "#{l(:label_version)} #{@faq_version.version}/#{@faq.version} -" %>
-<%= link_to((l(:label_next) + ' &#187;'), :action => 'show_history_version', :id => @project, :faq_id => @faq, :version => (@faq_version.version + 1)) + " - " if @faq_version.version < @faq.version %>
-<%= link_to(l(:label_current_version), :action => 'show', :id => @project, :faq_id => @faq) %>
-</p>
+<div class="next-prev-links contextual">
+      <%= link_to_if @faq_version.version > 1,
+                     "\xc2\xab #{l(:label_previous)}",
+                     :action => 'show_history_version', :id => @project, :faq_id => @faq, :version => (@faq_version.version - 1) %>
+      <%= "| #{l(:label_version)} #{@faq_version.version}/#{@faq.version} |" %>
+      <%= link_to_if @faq_version.version < @faq.version,
+                     "#{l(:label_next)} \xc2\xbb",
+                     :action => 'show_history_version', :id => @project, :faq_id => @faq, :version => (@faq_version.version + 1) %>
+
+      <%= link_to("#{l(:label_current_version)}&nbsp;", :action => 'show', :id => @project, :faq_id => @faq) %>
+
+</div>
 
 <div class="faq" >
 
 <h3><%=h @faq_version.question %></h3>
 <p class="author">
-<%= updated_by(@faq_version.updated_on, @faq_version.updater) + '.'  %>
+<%= authoring @faq_version.updated_on, @faq_version.updater, :label => :label_updated_time_by %>.
 </p>
 
 <table width="100%">
@@ -22,7 +28,7 @@
     <td style="width:15%"><b><%=l(:field_category)%>:</b></td>
     <td style="width:35%"><%= @faq_version.category ? @faq_version.category : "-" %></td>
     <td style="width:15%"><b><%=l(:field_difficulty)%>:</b></td>
-    <td style="width:35%"><%= image_tag("stars_#{@faq_version.difficulty}.png", :plugin => "ezfaq_plugin", :alt => "#{l(:field_difficulty)}#{@faq_version.difficulty}", :title => "#{l(:field_difficulty)}#{@faq_version.difficulty}") %></td>
+    <td style="width:35%"><%= image_tag("stars_#{@faq_version.difficulty}.png", :plugin => "redmine_ezfaq_plugin", :alt => "#{l(:field_difficulty)}#{@faq_version.difficulty}", :title => "#{l(:field_difficulty)}#{@faq_version.difficulty}") %></td>
 </tr>
 <tr>
     <td><b><%=l(:field_assigned_to)%>:</b></td><td><%= @faq_version.assigned_to ? link_to_user(@faq_version.assigned_to) : "-"%></td>
@@ -53,5 +59,5 @@
 <% html_title "#{l(:label_title_ezfaq)}##{@faq.id} #{l(:label_version)}#{@faq_version.version}: #{@faq_version.question}" -%>
 
 <% content_for :header_tags do %>
-    <%= stylesheet_link_tag '/plugin_assets/ezfaq_plugin/stylesheets/ezfaq' %>
+     <%= stylesheet_link_tag 'ezfaq.css', :plugin => 'redmine_ezfaq_plugin', :media => 'screen' %>
 <% end %>

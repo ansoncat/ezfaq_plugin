@@ -12,22 +12,22 @@
 <h3><%=h @faq.question %></h3>
 <p class="author">
 <%= authoring @faq.created_on, @faq.author %>.
-<%= updated_by(@faq.updated_on, @faq.updater) + '.' if @faq.created_on != @faq.updated_on %>
-</p>
+<%= authoring @faq.updated_on, @faq.updater, :label => :label_updated_time_by if @faq.created_on != @faq.updated_on %>
+</p></p>
 
 <table width="100%">
 <tr>
     <td style="width:15%"><b><%=l(:field_category)%>:</b></td>
     <td style="width:35%"><%= @faq.category ? @faq.category : "-" %></td>
     <td style="width:15%"><b><%=l(:field_difficulty)%>:</b></td>
-    <td style="width:35%"><%= image_tag("stars_#{@faq.difficulty}.png", :plugin => "ezfaq_plugin", :alt => "#{l(:field_difficulty)}#{@faq.difficulty}", :title => "#{l(:field_difficulty)}#{@faq.difficulty}") %></td>
+    <td style="width:35%"><%= image_tag("stars_#{@faq.difficulty}.png", :plugin => "redmine_ezfaq_plugin", :alt => "#{l(:field_difficulty)}#{@faq.difficulty}", :title => "#{l(:field_difficulty)}#{@faq.difficulty}") %></td>
 </tr>
 <tr>
     <td><b><%=l(:field_assigned_to)%>:</b></td><td><%= @faq.assigned_to ? link_to_user(@faq.assigned_to) : "-"%></td>
     <td><b><%=l(:field_due_date)%>:</b></td><td><%= format_date(@faq.due_date) %></td>
 </tr>
 <tr>
-    <td><b><%=l(:field_related_issue)%>:</b></td><td><%= @faq.issue ? link_to_issue(@faq.issue):"-" %></td>
+    <td><b><%=l(:field_related_issue)%>:</b></td><td><%= @faq.issue ? link_to_issue(@faq.issue, :subject => false, :tracker => false):"-" %></td>
     <td><b><%=l(:field_related_message)%>:</b></td><td><%= @faq.message ? link_to_message(@faq.message):"-" %></td>
 </tr>
 <tr>
@@ -48,7 +48,7 @@
 
 <% if @faq.attachments.any? %>
 <hr />
-<%= link_to_attachments @faq %>
+<%= link_to_attachments @faq, :thumbnails => true %>
 <% end %>
 
 </div>
@@ -64,6 +64,7 @@
 <% html_title "#{l(:label_title_ezfaq)}##{@faq.id}: #{@faq.question}" -%>
 
 <% content_for :header_tags do %>
-    <%= stylesheet_link_tag '/plugin_assets/ezfaq_plugin/stylesheets/ezfaq' %>
+
+    <%= stylesheet_link_tag 'ezfaq.css', :plugin => 'redmine_ezfaq_plugin', :media => 'screen'  %>
     <%= stylesheet_link_tag 'scm' %>
 <% end %>

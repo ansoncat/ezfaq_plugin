@@ -15,6 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+
 class EzfaqController < ApplicationController
   unloadable
   
@@ -77,7 +78,7 @@ class EzfaqController < ApplicationController
         attachments = Attachment.attach_files(@faq, params[:attachments])
         render_attachment_warning_if_needed(@faq)
         flash[:notice] = l(:notice_successful_create)
-        FaqMailer.deliver_faq_add(@project, @faq)
+        FaqMailer.faq_add(@project, @faq).deliver
         redirect_to :controller => 'ezfaq', :action => 'show', :id => @project, :faq_id => @faq
         return
       end		
@@ -93,14 +94,14 @@ class EzfaqController < ApplicationController
   def edit
     @faq_categories = FaqCategory.find(:all, :conditions => "project_id = #{@project.id}", :order => "position")
     
-    if request.post?
+    if request.post? || request.put?
       @faq.attributes = params[:faq]
       @faq.updater_id = User.current.id
       if @faq.save
         attachments = Attachment.attach_files(@faq, params[:attachments])
         render_attachment_warning_if_needed(@faq)
         flash[:notice] = l(:notice_successful_update)
-        FaqMailer.deliver_faq_update(@project, @faq)
+        FaqMailer.faq_update(@project, @faq).deliver
         redirect_to :controller => 'ezfaq', :action => 'show', :id => @project, :faq_id => @faq
         return
       end
@@ -121,7 +122,7 @@ class EzfaqController < ApplicationController
     end
     @target_project = @allowed_projects.detect {|p| p.id.to_s == params[:new_project_id]} if params[:new_project_id]
     @target_project ||= @project
-    if request.post?
+    if request.post? || request.put?
       @faq.copy(@target_project)
       flash[:notice] = l(:notice_successful_update)
       redirect_to :controller => 'ezfaq', :action => 'index', :id => @project
@@ -155,18 +156,15 @@ class EzfaqController < ApplicationController
   def add_faq_category
     @category = FaqCategory.new(params[:category])
     @category.project_id = @project.id
-    if request.post? and @category.save
+    if (request.post? || request.put?) and @category.save
       respond_to do |format|
-        format.html do
+        format.html {
           flash[:notice] = l(:notice_successful_create)
           redirect_to :controller => 'faq_categories', :action => 'index', :id => @project
-        end
-        format.js do
-          faq_categories = FaqCategory.find(:all, :conditions => "project_id = #{@project.id}")
-          render(:update) {|page| page.replace "faq_category_id",
-            content_tag('select', '<option></option>' + options_from_collection_for_select(faq_categories, 'id', 'name', @category.id), :id => 'faq_category_id', :name => 'faq[category_id]')
-          }
-        end
+        }
+        format.js {
+          render :partial => 'faq_category_modal_create'
+        }
       end
     end
   end  
@@ -175,7 +173,7 @@ class EzfaqController < ApplicationController
     @faq_setting = FaqSetting.find(:first, :conditions => "project_id = #{@project.id}")
     if !@faq_setting && request.get?
       @faq_setting = FaqSetting.new
-    elsif request.post?
+    elsif !request.get?
       if !@faq_setting 
         @faq_setting = FaqSetting.new(params[:faq_setting])
       else
@@ -206,7 +204,7 @@ private
   def faq_to_pdf
     faq_setting = FaqSetting.find(:first, :conditions => "project_id = #{@project.id}")
 
-    pdf = IFPDF.new(current_language)
+    pdf = ITCPDF.new(current_language)
     pdf.SetTitle("#{l(:label_faq)}-#{@faq.question}")
     pdf.SetAuthor('ezFAQ for Redmine')
     pdf.AliasNbPages
@@ -234,7 +232,7 @@ private
   end
 
   def faqs_to_pdf
-    pdf = IFPDF.new(current_language)
+    pdf = ITCPDF.new(current_language)
     pdf.SetTitle(@faq_setting.pdf_title) if (@faq_setting && @faq_setting.pdf_title)
     pdf.SetAuthor('ezFAQ for Redmine')
     pdf.AliasNbPages

@@ -1,0 +1,6 @@
+hideModal();
+<% 
+faq_categories = FaqCategory.find(:all, :conditions => "project_id = #{@project.id}")
+select = content_tag('select', content_tag('option') + options_from_collection_for_select(faq_categories, 'id', 'name', @category.id), :id => 'faq_category_id', :name => 'faq[category_id]')
+%>
+$('#faq_category_id').replaceWith('<%= escape_javascript(select) %>');

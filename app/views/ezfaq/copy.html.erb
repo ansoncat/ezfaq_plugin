@@ -2,7 +2,7 @@
 
 <ul><%= content_tag('li', link_to("#{l(:label_faq)}##{@faq.id}", :controller => 'ezfaq', :action => 'show', :id => @project, :faq_id => @faq) + h(": #{@faq.question}")) %></ul>
 
-<% form_tag({}, :id => 'move_form') do %>
+<% form = form_tag({}, :id => 'move_form') do %>
 <%= hidden_field_tag('faq_id', @faq.id) %>
 <div class="box tabular">
 <p><label for="new_project_id"><%=l(:field_project)%>:</label>
@@ -13,3 +13,5 @@
 
 <%= submit_tag l(:button_copy) %>
 <% end %>
+
+<%= form if Rails::VERSION::MAJOR >= 3 %>

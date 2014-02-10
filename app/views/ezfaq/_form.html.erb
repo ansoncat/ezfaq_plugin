@@ -1,13 +1,13 @@
 <script type="text/javascript">
 //<![CDATA[
 function change_stars() {
-  stars = $("stars_img");
-  difficulty = $("faq_difficulty");
-  position = stars.src.lastIndexOf("_") + 1;
-  new_img = stars.src.substring(0, position) + difficulty.value + ".png";
-  stars.src = new_img;
-  stars.alt =  $("difficulty_label").value + difficulty.value;
-  stars.title = stars.alt;
+  stars = $("#stars_img");
+  difficulty = $("#faq_difficulty");
+  position = stars.attr("src").lastIndexOf("_") + 1;
+  new_img = stars.attr("src").substring(0, position) + difficulty.attr("value") + ".png";
+  stars.attr("src", new_img);
+  stars.attr("alt", $("#difficulty_label").attr("value") + difficulty.attr("value"));
+  stars.attr("title", stars.attr("alt"));
 }
 
 //]]>
@@ -22,16 +22,25 @@ function change_stars() {
              
 <div class="splitcontentleft">
 <p><%= f.select :category_id, (@faq_categories.collect {|c| [c.name, c.id]}), :include_blank => true %>
-<%= prompt_to_remote(l(:label_faq_category_new),
-                     l(:label_faq_category_new), 'category[name]', 
-                     {:controller => 'ezfaq', :action => 'add_faq_category', :id => @project},
-                     :class => 'small', :tabindex => 199) if authorize_for('ezfaq', 'add_faq_category') %></p>
+<%= link_to(image_tag('add.png', :style => 'vertical-align: middle;'),
+            {:controller => 'ezfaq', :action => 'add_faq_category', :id => @project},
+            :remote => true,
+            :method => 'get',
+            :title => l(:label_faq_category_new),
+            :tabindex => 199) if authorize_for('ezfaq', 'add_faq_category') %></p>
 <p>
 <%= f.select :difficulty, (1..10), {}, :required => true, :onchange => "change_stars();"%>
-<%= image_tag("stars_5.png", :plugin => "ezfaq_plugin", :id => "stars_img", :alt => "#{l(:field_difficulty)}5", :title => "#{l(:field_difficulty)}5") %>
+<%= image_tag("stars_#{@faq.difficulty}.png", :plugin => "redmine_ezfaq_plugin", :id => "stars_img", :alt => "#{l(:field_difficulty)}#{@faq.difficulty}", :title => "#{l(:field_difficulty)}#{@faq.difficulty}") %>
 </p>
-<p><%= f.text_field :related_issue_id, :size => 10 %> <%= l(:label_info_for_input_id) %></p>
+<p>
+<%= f.text_field :related_issue_id, :size => 10 %> <%= l(:label_info_for_input_id) %>
+<%= javascript_tag "observeAutocompleteField('faq_related_issue_id', '#{escape_javascript auto_complete_issues_path(:project_id => @project, :scope => (Setting.cross_project_issue_relations? ? 'all' : nil))}')" %>
+</p>
+
 <p><%= f.select :related_version_id, @project.versions.sort.collect {|v| [v.name, v.id]}, :include_blank => true %></p>
+<% if !@faq.new_record? %>
+<p><%= f.select :is_valid, [[l(:label_valid), true], [l(:label_invalid), false]] %> </p>
+<% end %>
 </div>
 
 <div class="splitcontentright">
@@ -41,10 +50,10 @@ function change_stars() {
 </div>
 
 <%= hidden_field_tag 'difficulty_label', l(:field_difficulty) %>
-
-<p />
-<% if @faq.new_record? %>
-<p><label><%=l(:label_attachment_plural)%></label><%= render :partial => 'attachments/form' %></p>
+<% if !@faq.new_record? %>
+<%= f.hidden_field :version %>
 <% end %>
+<p />
+<p><label><%=l(:label_attachment_plural)%></label><%= render :partial => 'attachments/form' %></p>
 
 <%= wikitoolbar_for 'faq_answer' %>
